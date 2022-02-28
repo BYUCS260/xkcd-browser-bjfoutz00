@@ -1,3 +1,5 @@
+Vue.component('star-rating', VueStarRating.default);
+
 let app = new Vue({
     el: '#app',
     data: {
@@ -12,6 +14,7 @@ let app = new Vue({
         addedName: '',
         addedComment: '',
         comments: {},
+        ratings: {},
     },
 
     created() {
@@ -39,6 +42,10 @@ let app = new Vue({
             }
         },
 
+        firstComic() {
+            this.number = 1;
+        },
+
         previousComic() {
             this.number = this.current.num - 1;
             if (this.number < 1) {
@@ -53,6 +60,10 @@ let app = new Vue({
             }
         },
 
+        lastComic() {
+            this.number = this.max;
+        },
+
         getRandom(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
@@ -63,14 +74,29 @@ let app = new Vue({
             this.number = this.getRandom(1, this.max);
         },
 
+        setRating(rating) {
+            if (!(this.number in this.ratings)) {
+                Vue.set(this.ratings, this.number, {
+                    sum: 0,
+                    total: 0
+                });
+            }
+
+            this.ratings[this.number].sum += rating;
+            this.ratings[this.number].total += 1;
+        },
+
         addComment() {
             if (!(this.number in this.comments)) {
                 Vue.set(app.comments, this.number, new Array);
             }
 
+            let dt = moment().format('h:mm a, MMMM Do YYYY');
+
             this.comments[this.number].push({
                 author: this.addedName,
-                text: this.addedComment
+                text: this.addedComment,
+                time: dt,
             });
 
             this.addedName = '';
@@ -81,8 +107,9 @@ let app = new Vue({
     computed: {
         month() {
             var month = new Array;
-            if (this.current.month === undefined)
+            if (this.current.month === undefined) {
                 return '';
+            }
             month[0] = "January";
             month[1] = "February";
             month[2] = "March";
@@ -97,6 +124,13 @@ let app = new Vue({
             month[11] = "December";
             return month[this.current.month - 1];
         },
+
+        avgRating() {
+            if (this.ratings[this.number] === undefined) {
+                return '???';
+            }
+            return (this.ratings[this.number].sum / this.ratings[this.number].total).toPrecision(2);
+        }
     },
 
     watch: {

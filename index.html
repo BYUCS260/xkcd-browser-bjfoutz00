@@ -16,8 +16,10 @@
 
     <div v-else>
       <p>
-        <button v-on:click="previousComic">Previous</button>
-        <button v-on:click="nextComic">Next</button>
+        <button v-on:click="firstComic">&lt;&lt; First</button>
+        <button v-on:click="previousComic">&lt; Previous</button>
+        <button v-on:click="nextComic">Next &gt;</button>
+        <button v-on:click="lastComic">Last &gt;&gt;</button>
         <button v-on:click="randomComic">Random</button>
       </p>
 
@@ -26,6 +28,11 @@
       <p>{{current.alt}}</p>
       <p><i>#{{current.num}}, drawn on {{current.day}} {{month}} {{current.year}}</i></p>
 
+      <h3>Add a Rating</h3>
+      <star-rating v-bind:increment="0.5" v-bind:show-rating="false" inactive-color="red" @rating-selected="setRating">
+      </star-rating>
+      <p>Average Rating: {{avgRating}}</p>
+      <br />
       <h3>Add a Comment</h3>
       <form v-on:submit.prevent="addComment">
         <input v-model="addedName" placeholder="Name">
@@ -39,6 +46,7 @@
         <hr>
         <p>{{comment.text}}</p>
         <p><i>-- {{comment.author}}</i></p>
+        <p><i>{{comment.time}}</i></p>
       </div>
 
     </div>
@@ -46,6 +54,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/vue-star-rating/dist/VueStarRating.umd.min.js"></script>`
   <script src="/script.js"></script>
 </body>
 
